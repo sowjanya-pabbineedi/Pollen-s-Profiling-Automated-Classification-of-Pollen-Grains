@@ -1,1 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pollen Grain Prediction</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f4f8; /* Light blue-gray background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+      }
 
+      @media (max-width: 1000px) {
+        body {
+          background: #000000;
+          background: linear-gradient(
+            304deg,
+            rgba(0, 0, 0, 1) 63%,
+            rgba(250, 250, 250, 1) 98%,
+            rgba(255, 255, 255, 1) 100%
+          );
+        }
+        .container {
+          background: #020024;
+          background: linear-gradient(
+            90deg,
+            rgba(2, 0, 36, 1) 0%,
+            rgba(9, 9, 121, 1) 35%,
+            rgba(0, 212, 255, 1) 100%
+          );
+          color: #00bfff;
+        }
+
+        div.image-preview {
+          background: #2c3e50; /* fallback for old browsers */
+          background: -webkit-linear-gradient(
+            to right,
+            #3498db,
+            #2c3e50
+          ); /* Chrome 10-25, Safari 5.1-6 */
+          background: linear-gradient(
+            to right,
+            #3498db,
+            #2c3e50
+          ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+          border: 2px rgba(255, 255, 255, 0.882) solid;
+          border-style: dashed;
+
+          border-radius: 10px;
+        }
+        .btn-grad {
+          background-image: linear-gradient(
+            to right,
+            #232526 0%,
+            #414345 51%,
+            #232526 100%
+          );
+        }
+        .btn-grad {
+          margin: 10px;
+          padding: 15px 45px;
+          text-align: center;
+          text-transform: uppercase;
+          transition: 0.5s;
+          background-size: 200% auto;
+          color: white;
+          box-shadow: 0 0 20px #eee;
+          border-radius: 10px;
+          display: block;
+        }
+
+        .btn-grad:hover {
+          background-position: right center; /* change the direction of the change here */
+          color: #fff;
+          text-decoration: none;
+        }
+      }
+
+      h1 {
+        color: #00d4ff;
+        margin-bottom: 25px;
+        font-size: 2em;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .file-input-label {
+        border: 2px dashed #a0aec0; /* Gray-400 */
+        border-radius: 8px;
+        padding: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .file-input-label:hover {
+        background-color: #edf2f7; /* Gray-50 */
+      }
+      .file-input-label svg {
+        width: 60px;
+        height: 60px;
+        color: #718096; /* Gray-600 */
+        margin-bottom: 10px;
+      }
+      .file-input-label p {
+        color: #4a5568; /* Gray-700 */
+        font-size: 1.1em;
+        margin-bottom: 5px;
+      }
+      .file-input-label small {
+        color: #718096; /* Gray-600 */
+        font-size: 0.9em;
+      }
+      input[type="file"] {
+        display: none;
+      }
+      .image-preview {
+        margin-top: 20px;
+        width: 192px; /* 48 * 4 */
+        height: 192px; /* 48 * 4 */
+        border: 1px solid #e2e8f0; /* Gray-200 */
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f7fafc; /* Gray-100 */
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      button {
+        background-color: #10b981; /* Green-500 */
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1em;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      button:hover {
+        background-color: #059669; /* Green-600 */
+        transform: translateY(-2px);
+      }
+      .message {
+        margin-top: 25px;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: bold;
+      }
+      .prediction-text {
+        background-color: #d1fae5; /* Green-100 */
+        border: 1px solid #6ee7b7; /* Green-300 */
+        color: #065f46; /* Green-800 */
+      }
+      .error-message {
+        background-color: #fee2e2; /* Red-100 */
+        border: 1px solid #fca5a5; /* Red-300 */
+        color: #991b1b; /* Red-800 */
+      }
+      .back-link {
+        display: block;
+        margin-top: 25px;
+        color: #3b82f6; /* Blue-500 */
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+      .back-link:hover {
+        color: #1d4ed8; /* Blue-700 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Upload Pollen Image</h1>
+
+      <form action="/predict" method="post" enctype="multipart/form-data">
+        <label for="image-upload" class="file-input-label">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v8"
+            ></path>
+          </svg>
+          <p id="file-name">Drag & Drop your image here or Click to Browse</p>
+          <small>Only image files (JPG, PNG) are allowed</small>
+          <input
+            type="file"
+            name="image"
+            id="image-upload"
+            accept="image/*"
+            onchange="updateFileName(this)"
+          />
+        </label>
+
+        <div id="image-preview" class="image-preview hidden">
+          <img src="#" alt="Image Preview" />
+        </div>
+
+        <button class="btn-grad" type="submit">Predict</button>
+      </form>
+
+      {% if prediction_text %}
+      <div class="message prediction-text">{{ prediction_text }}</div>
+      {% endif %} {% if error %}
+      <div class="message error-message">{{ error }}</div>
+      {% endif %}
+
+      <a href="/" class="back-link"> &larr; Back to Home </a>
+    </div>
+
+    <script>
+      function updateFileName(input) {
+        const fileNameSpan = document.getElementById("file-name");
+        const imagePreview = document.getElementById("image-preview");
+        const previewImg = imagePreview.querySelector("img");
+
+        if (input.files && input.files[0]) {
+          const file = input.files[0];
+          fileNameSpan.textContent = file.name;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            imagePreview.classList.remove("hidden");
+          };
+          reader.readAsDataURL(file);
+        } else {
+          fileNameSpan.textContent =
+            "Drag & Drop your image here or Click to Browse";
+          imagePreview.classList.add("hidden");
+          previewImg.src = "#"; // Clear preview
+        }
+      }
+    </script>
+  </body>
+</html>
